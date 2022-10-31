@@ -17,10 +17,15 @@ const groceryList = [
   },
 ];
 
+router.use((req, res, next) => {
+  if(req.session.user) {
+    next()
+  }else {
+    res.send(401)
+  }
+});
+
 router.get('/', (req, res) => {
-  res.cookie('visited', 'true', {
-    maxAge: 10000,
-  });
   res.send(groceryList);
 });
 
@@ -35,6 +40,31 @@ router.post('/', (req, res) => {
   console.log(req.body);
   groceryList.push(req.body);
   res.send(201);
+});
+
+router.get('/shopping/cart', (req, res) => {
+  const { cart } = req.session;
+  if(!cart) {
+    res.send('You have no items in your cart session.');
+  } else {
+    res.send(cart);
+  }
+});
+
+router.post('/shopping/cart/item', (req, res) => {
+  const { item, quantity } = req.body;
+  const cartItem = { item, quantity };
+  const { cart } = req.session; 
+  if(cart)  {
+    req.session.cart.items.push(cartItem);
+  } else {
+    req.session.cart = {
+      items: [cartItem],
+    };
+  }
+
+  res.send(201);
+
 });
 
 module.exports = router;
