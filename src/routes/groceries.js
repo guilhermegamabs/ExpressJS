@@ -18,9 +18,10 @@ const groceryList = [
 ];
 
 router.use((req, res, next) => {
-  if(req.session.user) {
+  console.log('Inside Groceires Auth Check Middleware');
+  if (req.user) {
     next()
-  }else {
+  } else {
     res.send(401)
   }
 });
@@ -44,7 +45,7 @@ router.post('/', (req, res) => {
 
 router.get('/shopping/cart', (req, res) => {
   const { cart } = req.session;
-  if(!cart) {
+  if (!cart) {
     res.send('You have no items in your cart session.');
   } else {
     res.send(cart);
@@ -54,8 +55,8 @@ router.get('/shopping/cart', (req, res) => {
 router.post('/shopping/cart/item', (req, res) => {
   const { item, quantity } = req.body;
   const cartItem = { item, quantity };
-  const { cart } = req.session; 
-  if(cart)  {
+  const { cart } = req.session;
+  if (cart) {
     req.session.cart.items.push(cartItem);
   } else {
     req.session.cart = {

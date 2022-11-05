@@ -2,6 +2,22 @@ const passport = require('passport');
 const { Strategy } = require('passport-local');
 const User = require('../database/schemas/User');
 const { comparePassword } = require('../utils/helper');
+
+passport.serializeUser((user, done) => done(null, user.id));
+
+
+passport.deserializeUser((id, done) => {
+  console.log(id);
+  try {
+    const user = await User.findById(id);
+    if (!user) throw new Error('User not found');
+    done(null, user);
+  } catch (e) {
+    console.log(e);
+    done(e, null);
+  }
+});
+
 passport.use(
   new Strategy({
     usernameField: 'email',
