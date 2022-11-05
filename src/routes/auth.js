@@ -1,8 +1,9 @@
 const { Router } = require('express');
 const User = require('../database/schemas/User');
-const router = Router();
+const passport = require('passport');
 const { hashPassword, comparePassword } = require('../utils/helper');
-
+const router = Router();
+/*
 router.post('/login', async (request, response) => {
   const { email, password } = request.body;
   if (!email || !password) return response.send(400);
@@ -17,6 +18,11 @@ router.post('/login', async (request, response) => {
     console.log('Failed to Authenticate');
     return response.send(401);
   }
+});
+*/
+
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  res.send(200);
 });
 
 router.post('/register', async (req, res) => {
