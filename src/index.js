@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieparser = require('cookie-parser');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 require('./strategies/local');
 
@@ -24,6 +25,9 @@ app.use(session({
   secret: "Essa é a mensagem secreta!",
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: ''
+  }),
 }));
 
 app.use((req, res, next) => {
